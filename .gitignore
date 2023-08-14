@@ -506,6 +506,7 @@ FodyWeavers.xsd
 
 # End of https://www.toptal.com/developers/gitignore/api/c++,unrealengine,visualstudio
 
+Assets/*
 Content/Megascans/*
 Content/StarterContent/*
 Content/BlackAlder/*
@@ -514,3 +515,4 @@ Content/AncientContent/*
 Content/MedievalDungeon/*
 Content/AnimalVarietyPack/*
 Content/Controls/*
+Content/Mixamo/*
