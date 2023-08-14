@@ -2,6 +2,7 @@
 
 
 #include "Items/Item.h"
+#include "Characters/RPGCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "SlashRPG/DebugMacros.h"
@@ -37,14 +38,20 @@ float AItem::TransformedCos()
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(1, 15.0f, FColor::Yellow, OtherActorName);
+	ARPGCharacter* RPGCharacter = Cast<ARPGCharacter>(OtherActor);
+	if (RPGCharacter)
+	{
+		RPGCharacter->SetOverlappingItem(this);
+	}
 }
 
 void AItem::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	const FString OtherActorName = OtherActor->GetName();
-	GEngine->AddOnScreenDebugMessage(1, 15.0f, FColor::Red, OtherActorName);
+	ARPGCharacter* RPGCharacter = Cast<ARPGCharacter>(OtherActor);
+	if (RPGCharacter)
+	{
+		RPGCharacter->SetOverlappingItem(nullptr);
+	}
 }
 
 void AItem::Tick(float DeltaTime)
