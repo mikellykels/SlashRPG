@@ -4,6 +4,7 @@
 #include "Characters/RPGCharacter.h"
 #include "Animation/AnimMontage.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
@@ -75,6 +76,15 @@ void ARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ARPGCharacter::Interact);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ARPGCharacter::Attack);
+	}
+}
+
+void ARPGCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
+{
+	if (EquippedWeapon && EquippedWeapon->GetWeaponBox())
+	{
+		EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+		EquippedWeapon->IgnoreActors.Empty();
 	}
 }
 
@@ -201,7 +211,7 @@ void ARPGCharacter::PlayAttackMontage()
 	}
 }
 
-void ARPGCharacter::PlayEquipMontage(FName SectionName)
+void ARPGCharacter::PlayEquipMontage(const FName& SectionName)
 {
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && EquipMontage)
