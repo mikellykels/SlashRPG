@@ -49,7 +49,6 @@ void ARPGCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -57,6 +56,8 @@ void ARPGCharacter::BeginPlay()
 			Subsystem->AddMappingContext(CharacterMappingContext, 0);
 		}
 	}
+
+	Tags.Add(FName("SlashCharacter"));
 }
 
 void ARPGCharacter::Tick(float DeltaTime)
