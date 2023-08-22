@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseCharacter.h"
 #include "CharacterTypes.h"
-#include "GameFramework/Character.h"
 #include "InputAction.h"
 #include "RPGCharacter.generated.h"
 
@@ -19,18 +19,14 @@ class UInputMappingContext;
 class USpringArmComponent;
 
 UCLASS()
-class SLASHRPG_API ARPGCharacter : public ACharacter
+class SLASHRPG_API ARPGCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
 public:
 	ARPGCharacter();
-
-	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	UFUNCTION(BlueprintCallable)
-	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
+	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -53,37 +49,33 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* AttackAction;
 
-	/* Callbacks for inputs */
+	/** Callbacks for inputs */
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Interact();
-	void Attack();
+	virtual void Attack() override;
 
-	/* Play Montage Functions */
-	void PlayAttackMontage();
+	/** Combat */
+	void EquipWeapon(AWeapon* Weapon);
+	virtual void AttackEnd() override;
+	virtual bool CanAttack() override;
+	bool CanDisarm();
+	bool CanArm();
+	void Disarm();
+	void Arm();
 	void PlayEquipMontage(const FName& SectionName);
 
 	UFUNCTION(BlueprintCallable)
-	void AttackEnd();
-	bool CanAttack();
-	bool CanDisarm();
-	bool CanArm();
+	void AttachWeaponToBack();
 
 	UFUNCTION(BlueprintCallable)
-	void Disarm();
-
-	UFUNCTION(BlueprintCallable)
-	void Arm();
+	void AttachWeaponToHand();
 
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
 
 private:
-	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
-
-	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	EActionState ActionState = EActionState::EAS_Unoccupied;
-
+	/** Character Components */
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Capsule;
 
@@ -102,15 +94,13 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	/* Animation Montages */
-	UPROPERTY(EditDefaultsOnly, Category = "Montages")
-	UAnimMontage* AttackMontage;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* EquipMontage;
 
-	UPROPERTY(VisibleAnywhere, Category = "Weapon")
-	AWeapon* EquippedWeapon;
+	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
