@@ -16,6 +16,7 @@ class UCapsuleComponent;
 class UGroomComponent;
 class UInputAction;
 class UInputMappingContext;
+class USlashOverlay;
 class USpringArmComponent;
 
 UCLASS()
@@ -26,7 +27,9 @@ class SLASHRPG_API ARPGCharacter : public ABaseCharacter
 public:
 	ARPGCharacter();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void GetHit_Implementation(const FVector& ImpactPoint) override;
+	virtual void Jump() override;
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -64,6 +67,7 @@ protected:
 	void Disarm();
 	void Arm();
 	void PlayEquipMontage(const FName& SectionName);
+	virtual void Die() override;
 
 	UFUNCTION(BlueprintCallable)
 	void AttachWeaponToBack();
@@ -74,7 +78,14 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void FinishEquipping();
 
+	UFUNCTION(BlueprintCallable)
+	void HitReactEnd();
+
 private:
+	bool IsUnoccupied();
+	void InitializeSlashOverlay();
+	void SetHUDHealth();
+
 	/** Character Components */
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* Capsule;
@@ -102,7 +113,11 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	EActionState ActionState = EActionState::EAS_Unoccupied;
 
+	UPROPERTY()
+	USlashOverlay* SlashOverlay;
+
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
+	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 };
