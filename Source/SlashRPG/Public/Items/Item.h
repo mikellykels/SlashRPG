@@ -7,6 +7,8 @@
 #include "Item.generated.h"
 
 class UNiagaraComponent;
+class UNiagaraSystem;
+class USoundBase;
 class UStaticMeshComponent;
 class USphereComponent;
 
@@ -28,6 +30,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void SpawnPickupSystem();
+	virtual void SpawnPickupSound();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float Amplitude = 0.25f;
@@ -59,11 +63,17 @@ protected:
 	USphereComponent* Sphere;
 
 	UPROPERTY(EditAnywhere)
-	UNiagaraComponent* EmbersEffect;
+	UNiagaraComponent* ItemEffect;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* PickupSound;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
+
+	UPROPERTY(EditAnywhere)
+	UNiagaraSystem* PickupEffect;
 };
 
 template<typename T>

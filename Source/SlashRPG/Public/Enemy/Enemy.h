@@ -8,6 +8,7 @@
 #include "Enemy.generated.h"
 
 class AAIController;
+class ASoul;
 class AWeapon;
 class UHealthBarComponent;
 class UPawnSensingComponent;
@@ -37,6 +38,7 @@ protected:
 
 		/** <ABaseCharacter> */
 	virtual void Die() override;
+	void SpawnSoul();
 	virtual void Attack() override;
 	virtual bool CanAttack() override;
 	virtual void AttackEnd() override;
@@ -126,4 +128,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	float DeathLifeSpan = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<ASoul> SoulClass;
 };
