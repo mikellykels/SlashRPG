@@ -179,6 +179,11 @@ void ARPGCharacter::Interact()
 	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
 	if (OverlappingWeapon)
 	{
+		// TODO: Create inventory system instead
+		if (EquippedWeapon)
+		{
+			EquippedWeapon->Destroy();
+		}
 		EquipWeapon(OverlappingWeapon);
 	}
 	else
@@ -277,9 +282,9 @@ void ARPGCharacter::PlayEquipMontage(const FName& SectionName)
 	}
 }
 
-void ARPGCharacter::Die()
+void ARPGCharacter::Die_Implementation()
 {
-	Super::Die();
+	Super::Die_Implementation();
 
 	ActionState = EActionState::EAS_Dead;
 	DisableMeshCollision();
