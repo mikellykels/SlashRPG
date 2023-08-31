@@ -34,6 +34,9 @@ public:
 	bool bIsFalling;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool bIsCrouching;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	ECharacterState CharacterState;
 		
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")

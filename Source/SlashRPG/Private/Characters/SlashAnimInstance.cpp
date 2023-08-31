@@ -25,6 +25,7 @@ void USlashAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	{
 		GroundSpeed = UKismetMathLibrary::VSizeXY(CharacterMovementComponent->Velocity);
 		bIsFalling = CharacterMovementComponent->IsFalling();
+		bIsCrouching = CharacterMovementComponent->IsCrouching();
 		CharacterState = RPGCharacter->GetCharacterState();
 		ActionState = RPGCharacter->GetActionState();
 		DeathPose = RPGCharacter->GetDeathPose();

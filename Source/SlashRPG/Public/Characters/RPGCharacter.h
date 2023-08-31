@@ -32,6 +32,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Jump() override;
+	//virtual void Crouch() override;
+	//virtual void UnCrouch() override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual void SetOverlappingItem(AItem* Item) override;
@@ -62,12 +64,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	UInputAction* DodgeAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	UInputAction* CrouchAction;
+
 	/** Callbacks for inputs */
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Interact();
 	virtual void Attack() override;
 	void Dodge();
+	void Sprint();
+	void SprintReleased();
+	void StartCrouch();
+	void StopCrouch();
 
 	/** Combat */
 	void EquipWeapon(AWeapon* Weapon);
@@ -118,7 +130,7 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* EquipMontage;
 
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
@@ -128,6 +140,9 @@ private:
 
 	UPROPERTY()
 	USlashOverlay* SlashOverlay;
+
+	float DefaultWalkSpeed = 800.f;
+	float SprintSpeed = 1200.0f;
 
 public:
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
